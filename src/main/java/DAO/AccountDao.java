@@ -10,6 +10,18 @@ import Util.ConnectionUtil;
 
 public class AccountDao {
 
+    private static AccountDao accountDao = null;
+
+    private AccountDao(){
+
+    }
+
+    public static AccountDao getInstance() {
+        if(accountDao == null) {
+            accountDao = new AccountDao();
+        }
+        return accountDao;
+    }
     public Account getAccountByUsername(String username) throws SQLException {
         Account account = null;
         try (Connection con = ConnectionUtil.getConnection()) {

@@ -29,18 +29,18 @@ public class SocialMediaController {
 
         ObjectMapper om = new ObjectMapper();
 
-        AccountService as = new AccountService();
+        AccountService as = AccountService.getInstance();
         app.post("register", ctx -> this.createAccount(ctx, as, om));
         app.post("login", ctx -> this.login(ctx, as, om));
         
-        MessageService ms = new MessageService();
+        MessageService ms = MessageService.getInstance();
         app.post("messages", ctx -> this.createMessage(ctx, ms, om));
         app.get("messages", ctx -> this.getAllMessage(ctx, ms, om));
+
         app.get("messages/{message_id}", ctx -> this.getMessageById(ctx, ms, om));
         app.patch("messages/{message_id}", ctx -> this.patchMessage(ctx, ms, om));
         app.delete("messages/{message_id}", ctx -> this.deleteMessageById(ctx, ms, om));
 
-        
         app.get("accounts/{accountId}/messages", ctx -> this.getAllMessagesFromUser(ctx, ms, om));
 
         return app;
@@ -117,7 +117,6 @@ public class SocialMediaController {
     }
 
     private void getMessageById(Context ctx, MessageService ms, ObjectMapper om) {
-        System.out.println("*** getMessageById");
         try {
             String id = ctx.pathParam("message_id");
             Message message = ms.getMessageById(Integer.parseInt(id));
@@ -129,7 +128,6 @@ public class SocialMediaController {
     }
 
     private void getAllMessage(Context ctx, MessageService ms, ObjectMapper om) {
-        System.out.println("*** getAllMessage");
         try {
             List<Message> listRet = ms.getAllMessage();
 
@@ -150,7 +148,6 @@ public class SocialMediaController {
     }
 
     private void createMessage(Context ctx, MessageService ms, ObjectMapper om) throws JsonProcessingException {
-        System.out.println("*** createMessage");
         String jsonString = ctx.body();
         Message message = om.readValue(jsonString, Message.class);
         

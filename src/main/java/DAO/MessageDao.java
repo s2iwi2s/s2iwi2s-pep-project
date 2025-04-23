@@ -13,11 +13,21 @@ import Util.ConnectionUtil;
 
 public class MessageDao {
 
+    private static MessageDao messageDao = null;
+
+    private MessageDao() {
+
+    }
+
+    public static MessageDao getInstance() {
+        if(messageDao == null) {
+            messageDao = new MessageDao();
+        }
+
+        return messageDao;
+    }
+
     public Message createMessage(Message message) throws SQLException {
-        // message_id integer primary key auto_increment,
-        // posted_by integer,
-        // message_text varchar(255),
-        // time_posted_epoch long,
         try (Connection con = ConnectionUtil.getConnection()) {
             String sql = "insert into message (posted_by, message_text, time_posted_epoch) values(?, ?, ?)";
             PreparedStatement pstmt = con.prepareStatement(sql);
@@ -51,7 +61,6 @@ public class MessageDao {
     }
 
     public List<Message> getAllMessage() throws Exception {
-        System.out.println("***** > getAllMessage DAO");
         List<Message> list = new ArrayList<>();
         try (Connection con = ConnectionUtil.getConnection()) {
             String sql = "select * from message";
@@ -69,7 +78,6 @@ public class MessageDao {
     }
 
     public Message getMessageById(int id) throws SQLException {
-        System.out.println("***** > getMessageById DAO: " + id);
         Message msg = null;
         try (Connection con = ConnectionUtil.getConnection()) {
             String sql = "select * from message where message_id = ?";
@@ -88,7 +96,6 @@ public class MessageDao {
     }
 
     public Message patchMessage(int id, Message message) throws SQLException {
-        System.out.println(String.format("***** > getMessageById DAO: %d, %s, %d, %d", message.getPosted_by(), message.getMessage_text(), message.getTime_posted_epoch(), id));
         try (Connection con = ConnectionUtil.getConnection()) {
             String sql = "update message set message_text = ? where message_id = ?";
             PreparedStatement pstmt = con.prepareStatement(sql);
@@ -115,7 +122,6 @@ public class MessageDao {
     }
 
     public List<Message> getAllMessagesFromUser(int accountId) throws SQLException {
-        System.out.println("***** > getAllMessagesFromUser DAO");
         List<Message> list = new ArrayList<>();
         try (Connection con = ConnectionUtil.getConnection()) {
             String sql = "select * from message where posted_by = ?";

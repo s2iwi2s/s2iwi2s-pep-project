@@ -7,14 +7,21 @@ import Model.Message;
 
 public class MessageService {
 
+    private static MessageService messageService_ = null;
     MessageDao messageDao;
 
-    public MessageService(){
-        this.messageDao = new MessageDao();
+    private MessageService(){
+        this.messageDao = MessageDao.getInstance();
+    }
+
+    public static MessageService getInstance() {
+        if(messageService_ == null) {
+            messageService_ = new MessageService();
+        }
+        return messageService_;
     }
 
     public Message createMessage(Message message) throws Exception {
-        System.out.println(String.format("createMessage: %s, %d", message.getMessage_text(), message.getMessage_id()));
         if(message.getMessage_text() == null || message.getMessage_text().length() > 255 ||  message.getMessage_text().length() == 0) {
             throw new Exception("Create message error");
         } 
@@ -22,17 +29,14 @@ public class MessageService {
     }
 
     public List<Message> getAllMessage() throws Exception {
-        System.out.println("***** > getAllMessage Service");
         return this.messageDao.getAllMessage();
     }
 
     public Message getMessageById(int id) throws Exception {
-        System.out.println("***** > getMessageById Service");
         return this.messageDao.getMessageById(id);
     }
 
     public Message patchMessage(int id, Message message) throws Exception {
-        System.out.println("***** > patchMessage Service");
         if(message.getMessage_text() == null || message.getMessage_text().length() > 255 ||  message.getMessage_text().length() == 0) {
             throw new Exception("Patch message error");
         }
@@ -52,7 +56,6 @@ public class MessageService {
     }
 
     public List<Message> getAllMessagesFromUser(int accountId) throws Exception {
-        System.out.println("***** > getAllMessagesFromUser Service");
         return this.messageDao.getAllMessagesFromUser(accountId);
     }
 

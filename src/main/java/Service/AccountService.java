@@ -8,8 +8,17 @@ import Model.Account;
 public class AccountService {
 
     private AccountDao accountDao;
-    public AccountService() {
-        this.accountDao = new AccountDao();
+
+    private static AccountService accountService_ = null;
+    private AccountService() {
+        this.accountDao = AccountDao.getInstance();
+    }
+
+    public static AccountService getInstance() {
+        if (accountService_ == null) {
+            accountService_ = new AccountService();
+        }
+        return accountService_;
     }
 
     public Account createAccount(Account account) throws Exception {

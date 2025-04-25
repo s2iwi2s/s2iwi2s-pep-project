@@ -35,18 +35,18 @@ public class SocialMediaController {
         
         MessageService ms = MessageService.getInstance();
         app.post("messages", ctx -> this.createMessage(ctx, ms, om));
-        app.get("messages", ctx -> this.getAllMessage(ctx, ms, om));
+        app.get("messages", ctx -> this.getAllMessage(ctx, ms));
 
-        app.get("messages/{message_id}", ctx -> this.getMessageById(ctx, ms, om));
+        app.get("messages/{message_id}", ctx -> this.getMessageById(ctx, ms));
         app.patch("messages/{message_id}", ctx -> this.patchMessage(ctx, ms, om));
-        app.delete("messages/{message_id}", ctx -> this.deleteMessageById(ctx, ms, om));
+        app.delete("messages/{message_id}", ctx -> this.deleteMessageById(ctx, ms));
 
-        app.get("accounts/{accountId}/messages", ctx -> this.getAllMessagesFromUser(ctx, ms, om));
+        app.get("accounts/{accountId}/messages", ctx -> this.getAllMessagesFromUser(ctx, ms));
 
         return app;
     }
 
-    private void getAllMessagesFromUser(Context ctx, MessageService ms, ObjectMapper om) {
+    private void getAllMessagesFromUser(Context ctx, MessageService ms) {
         try {
             String accountId = ctx.pathParam("accountId");
             List<Message> listRet = ms.getAllMessagesFromUser(Integer.parseInt(accountId));
@@ -90,7 +90,7 @@ public class SocialMediaController {
         
     }
 
-    private void deleteMessageById(Context ctx, MessageService ms, ObjectMapper om) {
+    private void deleteMessageById(Context ctx, MessageService ms) {
         try {
             String id = ctx.pathParam("message_id");
             Message message = ms.deleteMessageById(Integer.parseInt(id));
@@ -116,7 +116,7 @@ public class SocialMediaController {
         }
     }
 
-    private void getMessageById(Context ctx, MessageService ms, ObjectMapper om) {
+    private void getMessageById(Context ctx, MessageService ms) {
         try {
             String id = ctx.pathParam("message_id");
             Message message = ms.getMessageById(Integer.parseInt(id));
@@ -127,7 +127,7 @@ public class SocialMediaController {
         ctx.status(200);
     }
 
-    private void getAllMessage(Context ctx, MessageService ms, ObjectMapper om) {
+    private void getAllMessage(Context ctx, MessageService ms) {
         try {
             List<Message> listRet = ms.getAllMessage();
 
@@ -161,6 +161,4 @@ public class SocialMediaController {
             ctx.status(400);
         }
     }
-
-
 }
